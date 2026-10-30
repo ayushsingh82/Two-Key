@@ -12,6 +12,38 @@ Ship a working agent with a dashboard that:
 - records practice trades within user risk limits
 - keeps a replayable reasoning trail for every decision
 
+## Progress
+
+| # | Milestone | State |
+|---|---|---|
+| 1 | Data layer and mock feed | Done (`lib/data/index.ts`, 9 KOLs, 16 posts, wallet events, market paths) |
+| 2 | Extraction and convergence | Done (`lib/extract.ts`, `lib/converge.ts`). Optional LLM extractor in `lib/extract-llm.ts`, untested without an API key. |
+| 3 | Wallet check and fusion | Done (`lib/converge.ts`, `lib/fusion.ts`) |
+| 4 | Trade engine and risk limits | Done (`lib/trade.ts`) |
+| 5 | Evidence links and replay | Done (`lib/snapshot.ts`, hash chain and replay) |
+| 6 | Trust score and echo filter | Done (`lib/trust.ts`) |
+| 7 | Court (bull, bear, judge) | Done, rule-based and deterministic (`lib/court.ts`) |
+| 8 | Dashboard | Done: landing page and 10 app pages in the Orca style, plus a risk lab that re-runs the agent via `/api/run` |
+| 9 | Backtest and demo data | Done: `/backtest` compares Two-Key with a naive buy-everything agent |
+| 10 | README, video, submission | Open |
+
+Run it: `npm run agent` prints decisions, trades and rejections. `npm test` runs 14 tests, all passing. `node scripts/e2e.mjs` builds, serves and checks every page and the API.
+
+Demo result on the sample data:
+
+| Token | Social | On-chain | Rule | Outcome |
+|---|---|---|---|---|
+| SOL | strong | strong | 1 | Full trade, take-profit, +$40 |
+| JUP | strong | weak | 2 | Small trade, stop-loss, loss |
+| WIF | strong | selling | 5 | Rejected as exit liquidity, avoided a loss |
+| BONK | weak | strong | 3 | Watchlist |
+| DOGE | weak (echoes) | weak | 4 | Rejected |
+| RNDR | weak | weak | 4 | Rejected |
+
+Backtest finding: on the sample data Two-Key and the naive agent both end at +$32, because Two-Key skips BONK, a winner. Two-Key risks $300 of capital against $1,200 for the naive agent. The app says this plainly instead of claiming a P&L win.
+
+Next: demo video and submission.
+
 ## Architecture
 
 | Layer | Piece | Notes |
