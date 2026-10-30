@@ -1,7 +1,7 @@
 import type { Kol, Market, Post, WalletEvent } from "../types";
 
 /**
- * Mock dataset. The X feed is a cached sample shaped like real posts, not a live X API pull.
+ * Cached dataset. The feeds are shaped like real X, Discord and Telegram posts, not live API pulls.
  * Time is fixed so every run and replay is deterministic.
  */
 export const NOW = Date.parse("2026-10-28T12:00:00Z");
@@ -25,6 +25,22 @@ export const KOLS: Kol[] = [
   { handle: "@clone_carl", calls: [call("DOGE", 210, "long", -4), call("BONK", 170, "long", -7), call("JUP", 120, "long", -3)] },
   { handle: "@echo_eve", calls: [call("DOGE", 200, "long", -6), call("WIF", 150, "long", -4), call("BONK", 110, "long", -8)] },
   { handle: "@quiet_quinn", calls: [call("BONK", 180, "long", 8), call("SOL", 140, "long", 5), call("RNDR", 100, "long", 4)] },
+  { handle: "@chain_chloe", calls: [call("SOL", 210, "long", 6), call("JUP", 170, "long", 3), call("RNDR", 120, "long", 2), call("WIF", 90, "long", -2)] },
+  { handle: "@defi_dani", calls: [call("JUP", 200, "long", 5), call("SOL", 150, "long", 4), call("BONK", 110, "long", 3)] },
+  { handle: "@sol_sasha", calls: [call("SOL", 230, "long", 8), call("WIF", 180, "long", 5), call("SOL", 130, "long", 3), call("JUP", 100, "long", -1)] },
+  { handle: "@flow_finn", calls: [call("SOL", 220, "long", 4), call("RNDR", 160, "long", 6), call("SOL", 120, "long", 5)] },
+  { handle: "@alpha_amir", calls: [call("BONK", 200, "long", -3), call("SOL", 150, "long", 2), call("JUP", 110, "long", 4), call("WIF", 80, "long", 7)] },
+  { handle: "@tape_tess", calls: [call("SOL", 190, "long", 3), call("DOGE", 140, "short", -5), call("RNDR", 100, "long", 1)] },
+  { handle: "@macro_marcus", calls: [call("JUP", 210, "long", 2), call("SOL", 170, "long", 6), call("DOGE", 130, "short", -3), call("BONK", 90, "long", -4)] },
+  { handle: "@whale_wes", calls: [call("WIF", 200, "short", -7), call("SOL", 160, "long", 5), call("BONK", 120, "long", 6), call("DOGE", 80, "short", -4)] },
+  { handle: "@quant_quill", calls: [call("RNDR", 210, "long", 5), call("SOL", 150, "long", 3), call("JUP", 110, "long", 2), call("WIF", 70, "long", -3)] },
+  { handle: "@vault_vik", calls: [call("SOL", 240, "long", 5), call("JUP", 180, "long", 4), call("RNDR", 130, "long", 3)] },
+  { handle: "@pump_paco", calls: [call("DOGE", 200, "long", -7), call("BONK", 160, "long", -9), call("WIF", 120, "long", -4), call("JUP", 90, "long", -5)] },
+  // Not followed by default. The cap is 20, so these four are available but ignored until the user selects them.
+  { handle: "@spam_sid", calls: [call("DOGE", 190, "long", -5), call("BONK", 150, "long", -6)] },
+  { handle: "@hype_hana", calls: [call("BONK", 180, "long", -8), call("DOGE", 140, "long", -6), call("WIF", 100, "long", -3)] },
+  { handle: "@late_leo", calls: [call("SOL", 120, "long", 1), call("JUP", 90, "long", -2)] },
+  { handle: "@bot_bart", calls: [call("DOGE", 210, "long", -7), call("BONK", 130, "long", -5), call("JUP", 100, "long", -4)] },
 ];
 
 export const POSTS: Post[] = [
@@ -50,9 +66,24 @@ export const POSTS: Post[] = [
   { id: "p15", kol: "@echo_eve", ts: ago(1.2), text: "$DOGE to the moon!! All in buying now, last chance before it pumps, bullish bullish bullish." },
   // RNDR: one lukewarm voice
   { id: "p16", kol: "@macro_mia", ts: ago(5.0), text: "$RNDR might be interesting, watching." },
+  // More voices, including Telegram and Discord sources
+  { id: "p17", kol: "@chain_chloe", source: "telegram", ts: ago(0.6), text: "Long $SOL. Smart money keeps adding and the breakout is confirmed, buying today." },
+  { id: "p18", kol: "@vault_vik", source: "discord", ts: ago(1.9), text: "Accumulating $SOL on the retest, high conviction." },
+  { id: "p19", kol: "@sol_sasha", ts: ago(3.4), text: "$SOL is strong here. Long, buying the dip." },
+  { id: "p20", kol: "@flow_finn", ts: ago(2.4), text: "$SOL clean breakout, loading more." },
+  { id: "p21", kol: "@whale_wes", source: "telegram", ts: ago(1.0), text: "$WIF looks stretched, maybe fading it." },
+  { id: "p22", kol: "@pump_paco", ts: ago(0.9), text: "$DOGE to the moon!! All in buying now, last chance before it pumps, bullish bullish bullish." },
+  { id: "p23", kol: "@quant_quill", ts: ago(3.5), text: "$RNDR might break out, watching the flows." },
+  { id: "p24", kol: "@defi_dani", source: "discord", ts: ago(4.5), text: "Maybe accumulate $RNDR if volume picks up." },
+  { id: "p25", kol: "@alpha_amir", ts: ago(3.8), text: "$BONK, watching, not sure yet." },
+  { id: "p26", kol: "@tape_tess", source: "telegram", ts: ago(2.0), text: "Rates are steady and no new catalyst today. Staying patient." },
+  // Not followed by default, so ignored
+  { id: "p27", kol: "@hype_hana", ts: ago(1.0), text: "$BONK to the moon, buying now, all in!" },
+  { id: "p28", kol: "@bot_bart", source: "telegram", ts: ago(1.1), text: "$BONK is the play, long, last chance!" },
+  { id: "p29", kol: "@late_leo", ts: ago(0.5), text: "Late to $SOL but buying now." },
 ];
 
-const wallet = (token: string, side: "buy" | "sell", usd: number, hoursAgo: number, w: string, smart = true): WalletEvent => ({
+const wallet =  (token: string, side: "buy" | "sell", usd: number, hoursAgo: number, w: string, smart = true): WalletEvent => ({
   token,
   side,
   usd,

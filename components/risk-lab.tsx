@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { MAX_KOLS } from "@/lib/settings";
 import { cn } from "@/lib/utils";
 
 type Result = {
+  kols: number;
   stats: { trades: number; wins: number; totalPnlUsd: number; rejected: number; lossAvoidedUsd: number };
   trades: { token: string; sizeUsd: number; exitReason: string; pnlUsd: number }[];
   rejections: { token: string; reason: string }[];
@@ -20,8 +22,9 @@ const FIELDS = [
 
 const usd = (n: number) => `${n < 0 ? "-" : ""}$${Math.abs(n).toFixed(2)}`;
 
-export function RiskLab() {
+export function RiskLab({ pool, followed }: { pool: string[]; followed: string[] }) {
   const [values, setValues] = useState<Record<string, string>>(Object.fromEntries(FIELDS.map((f) => [f.key, String(f.value)])));
+  const [selected, setSelected] = useState<string[]>(followed);
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -30,7 +33,7 @@ export function RiskLab() {
     setBusy(true);
     setError(null);
     try {
-      const res = await fetch("/api/run", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(values) });
+      const res = await fetch("/api/run", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...values, kols: selected }) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Request failed");
       setResult(data);
@@ -58,6 +61,30 @@ export function RiskLab() {
             </label>
           ))}
         </div>
+        <div className="mt-5">
+          <p className="flex items-baseline justify-between text-sm">
+            <span className="text-muted-foreground">Followed KOLs</span>
+            <span className={cn("font-mono text-xs", selected.length >= MAX_KOLS ? "text-amber-300" : "text-muted-foreground")}>{selected.length} of {MAX_KOLS}</span>
+          </p>
+          <div className="mt-2 grid max-h-44 grid-cols-2 gap-x-3 gap-y-1 overflow-y-auto rounded-lg border bg-muted p-3 text-xs">
+            {pool.map((h) => {
+              const on = selected.includes(h);
+              return (
+                <label key={h} className={cn("flex items-center gap-2", !on && selected.length >= MAX_KOLS && "opacity-40")}>
+                  <input
+                    type="checkbox"
+                    checked={on}
+                    disabled={!on && selected.length >= MAX_KOLS}
+                    onChange={() => setSelected(on ? selected.filter((x) => x !== h) : [...selected, h])}
+                    className="accent-[#9085fb]"
+                  />
+                  {h}
+                </label>
+              );
+            })}
+          </div>
+          {selected.length >= MAX_KOLS && <p className="mt-1.5 text-xs text-amber-300">The cap is {MAX_KOLS}. Untick one to follow another.</p>}
+        </div>
         <button
           type="button"
           onClick={run}
@@ -70,11 +97,12 @@ export function RiskLab() {
       </div>
       <div className="rounded-lg border bg-background p-4 text-sm">
         {!result ? (
-          <p className="text-muted-foreground">Change the limits and run the agent. Try a max position of 50, or 1 open position, and watch trades turn into rejections.</p>
+          <p className="text-muted-foreground">Change the limits or swap KOLs, then run the agent. Try a max position of 50, or 1 open position, and watch trades turn into rejections.</p>
         ) : (
           <>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-4 gap-3">
               {[
+                ["KOLs", String(result.kols), ""],
                 ["Trades", String(result.stats.trades), ""],
                 ["P&L", usd(result.stats.totalPnlUsd), result.stats.totalPnlUsd >= 0 ? "text-emerald-400" : "text-red-400"],
                 ["Rejected", String(result.stats.rejected), ""],

@@ -23,7 +23,7 @@ A trade needs both keys. When they disagree, the agent says no and records why.
 
 | Step | What happens |
 |---|---|
-| 1 | Watch up to 20 KOLs and extract token, sentiment, conviction and urgency from each post |
+| 1 | Watch up to 20 KOLs, chosen from a pool of 24, across X, Telegram and Discord, and extract token, sentiment, conviction and urgency from each post |
 | 2 | Score each KOL on past calls and filter copied or coordinated posts |
 | 3 | Detect trust-weighted convergence on a token |
 | 4 | Check whale and smart-money activity on the same token |
@@ -77,7 +77,8 @@ The `/scorecard` page checks each requirement live against the running agent.
 | Records practice trades | Paper portfolio with entry, size, stop-loss, take-profit and P&L |
 | Cause and effect | An evidence hash on every trade and rejection |
 | Repeatable reasoning trail | Hash-chained receipts and replay |
-| Up to 20 KOLs | Cap enforced in settings |
+| Up to 20 user-selected KOLs | 24 available, 20 followed by default, cap enforced in settings and the API |
+| Optional Discord and Telegram sources | Posts carry a source tag and are read alongside X |
 | Token, sentiment, conviction, urgency | Structured extraction per post |
 | Trusted voices converge | Trust-weighted convergence |
 | Transparent signal rules | Rule table in the app and in this README |
@@ -90,6 +91,7 @@ The `/scorecard` page checks each requirement live against the running agent.
 | Data | Source | Note |
 |---|---|---|
 | KOL posts | Cached feed in the shape of X posts | X API access is limited, so the feed is cached |
+| Telegram and Discord | Cached optional sources | Same post shape, shown with a source tag |
 | Wallet activity | Cached whale and smart-money events | Live source: Etherscan or public RPCs |
 | Prices and volume | Cached snapshot with an hourly outcome path | Live source: any free market API |
 

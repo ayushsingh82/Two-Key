@@ -10,11 +10,11 @@ export default function PulsePage() {
     <>
       <PageHeader title="KOL Pulse" description="Who we listen to, how much we trust them, and what each post says. Copied posts are flagged as echoes and ignored." />
       <div className="grid gap-6 xl:grid-cols-3">
-        <Panel title="Trust scores" subtitle="Hit rate on past calls, smoothed" className="xl:col-span-1">
+        <Panel title="Trust scores" subtitle={`${kols.filter((k) => k.followed).length} followed of ${kols.length} available. Hit rate on past calls, smoothed`} className="xl:col-span-1">
           <Table head={["KOL", "Trust", "Calls"]}>
             {kols.map((k) => (
-              <tr key={k.handle}>
-                <Td className="font-medium">{k.handle}</Td>
+              <tr key={k.handle} className={k.followed ? "" : "opacity-50"}>
+                <Td className="font-medium">{k.handle} {!k.followed && <Chip>not followed</Chip>}</Td>
                 <Td>
                   <div className="flex items-center gap-2">
                     <div className="h-1.5 w-16 overflow-hidden rounded-full bg-muted">
@@ -29,12 +29,13 @@ export default function PulsePage() {
           </Table>
         </Panel>
         <Panel title="Latest posts" subtitle={`${posts.length} posts, ${echoCount} flagged as echoes`} className="xl:col-span-2">
-          <Table head={["KOL", "Post", "Token", "Sentiment", "Conv.", "Urg.", "When"]}>
+          <Table head={["KOL", "Source", "Post", "Token", "Sentiment", "Conv.", "Urg.", "When"]}>
             {posts.map((p) => (
-              <tr key={p.id} className={p.echo ? "opacity-60" : ""}>
+              <tr key={p.id} className={p.echo || !p.followed ? "opacity-60" : ""}>
                 <Td className="whitespace-nowrap font-medium">{p.kol}</Td>
+                <Td><Chip>{p.source}</Chip></Td>
                 <Td className="min-w-64 text-muted-foreground">
-                  {p.text} {p.echo && <Chip tone="bad">echo</Chip>}
+                  {p.text} {p.echo && <Chip tone="bad">echo</Chip>} {!p.followed && <Chip>ignored</Chip>}
                 </Td>
                 <Td>{p.x.token ?? "-"}</Td>
                 <Td className={p.x.sentiment > 0.2 ? TONE.good : p.x.sentiment < -0.2 ? TONE.bad : TONE.warn}>{p.x.sentiment.toFixed(2)}</Td>

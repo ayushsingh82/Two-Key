@@ -1,6 +1,8 @@
 export type Direction = "long" | "short";
 
-export type Post = { id: string; kol: string; text: string; ts: number };
+export type Source = "x" | "discord" | "telegram";
+
+export type Post = { id: string; kol: string; text: string; ts: number; source?: Source };
 
 export type Extraction = {
   postId: string;

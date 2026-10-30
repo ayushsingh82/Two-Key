@@ -1,5 +1,6 @@
 import { PageHeader, Panel, Table, Td } from "@/components/panel";
 import { RiskLab } from "@/components/risk-lab";
+import { KOLS } from "@/lib/data";
 import { MAX_KOLS } from "@/lib/settings";
 import { getRun } from "@/lib/view";
 import { usd } from "@/lib/utils";
@@ -26,7 +27,7 @@ export default function SettingsPage() {
     <>
       <PageHeader title="Settings" description={`Risk limits and signal thresholds. Up to ${MAX_KOLS} KOLs can be followed. These values are read from the default configuration.`} />
       <Panel title="Risk lab" subtitle="Change the limits and re-run the agent. Nothing is saved." className="mb-6">
-        <RiskLab />
+        <RiskLab pool={KOLS.map((k) => k.handle)} followed={s.kols} />
       </Panel>
       <div className="grid gap-6 xl:grid-cols-3">
         <Panel title="Risk limits and thresholds" className="xl:col-span-2">
@@ -40,9 +41,13 @@ export default function SettingsPage() {
             ))}
           </Table>
         </Panel>
-        <Panel title="Followed KOLs" subtitle={`${s.kols.length} of ${MAX_KOLS}`}>
+        <Panel title="Followed KOLs" subtitle={`${s.kols.length} of ${MAX_KOLS}, from a pool of ${KOLS.length}`}>
           <ul className="space-y-1.5 text-sm">
             {s.kols.map((k) => <li key={k} className="text-muted-foreground">{k}</li>)}
+          </ul>
+          <p className="mt-4 border-t pt-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Available, not followed</p>
+          <ul className="mt-2 space-y-1.5 text-sm">
+            {KOLS.filter((k) => !s.kols.includes(k.handle)).map((k) => <li key={k.handle} className="text-muted-foreground/60">{k.handle}</li>)}
           </ul>
         </Panel>
       </div>

@@ -112,3 +112,25 @@ test("backtest compares Two-Key with a naive agent on equal footing", async () =
   assert.ok(b.twoKeyDeployed < b.naiveDeployed);
   assert.ok(b.twoKeyReturnPct > b.naiveReturnPct);
 });
+
+test("a pool of more than 20 KOLs is available and exactly 20 are followed by default", () => {
+  assert.ok(KOLS.length > MAX_KOLS);
+  const r = runPipeline();
+  assert.equal(r.settings.kols.length, MAX_KOLS);
+});
+
+test("posts from KOLs that are not followed are ignored, and swapping them in changes the result", () => {
+  const base = runPipeline();
+  const bonk = base.evidence.find((e) => e.token === "BONK")!;
+  assert.ok(!bonk.posts.some((p) => ["@hype_hana", "@bot_bart"].includes(p.kol)));
+  const swapped = runPipeline({ kols: [...base.settings.kols.slice(0, MAX_KOLS - 2), "@hype_hana", "@bot_bart"] });
+  assert.ok(swapped.evidence.find((e) => e.token === "BONK")!.posts.some((p) => p.kol === "@hype_hana"));
+});
+
+test("Telegram and Discord posts are read alongside X posts", () => {
+  const sources = new Set(POSTS.map((p) => p.source ?? "x"));
+  assert.deepEqual([...sources].sort(), ["discord", "telegram", "x"]);
+  const r = runPipeline();
+  const sol = r.evidence.find((e) => e.token === "SOL")!;
+  assert.ok(sol.posts.some((p) => p.source === "telegram") && sol.posts.some((p) => p.source === "discord"));
+});

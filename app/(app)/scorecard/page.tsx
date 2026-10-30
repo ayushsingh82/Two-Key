@@ -4,6 +4,7 @@ import { PageHeader, Panel, PulseRail } from "@/components/panel";
 import { replay } from "@/lib/snapshot";
 import { FUSION_RULES } from "@/lib/fusion";
 import { MAX_KOLS } from "@/lib/settings";
+import { KOLS, POSTS } from "@/lib/data";
 import { getPulse, getRun } from "@/lib/view";
 
 export const metadata = { title: "Scorecard" };
@@ -19,7 +20,8 @@ export default function ScorecardPage() {
     { requirement: "Records practice trades", evidence: `${run.trades.length} trades with entry, size, stop-loss, take-profit and P&L`, href: "/portfolio", pass: run.trades.length > 0 },
     { requirement: "Cause and effect", evidence: "Every trade and rejection carries an evidence hash", href: "/court", pass: run.trades.every((t) => !!t.evidenceHash) && run.rejections.every((r) => !!r.evidenceHash) },
     { requirement: "Repeatable reasoning trail", evidence: `${run.receipts.length} chained receipts, replay ${replayOk ? "matches" : "differs"}`, href: "/replay", pass: run.chainValid && replayOk },
-    { requirement: `Up to ${MAX_KOLS} KOLs`, evidence: `${run.settings.kols.length} followed, cap enforced in settings`, href: "/settings", pass: run.settings.kols.length <= MAX_KOLS },
+    { requirement: `Up to ${MAX_KOLS} user-selected KOLs`, evidence: `${run.settings.kols.length} followed from a pool of ${KOLS.length}, cap enforced in settings and the API`, href: "/settings", pass: run.settings.kols.length === MAX_KOLS && KOLS.length > MAX_KOLS },
+    { requirement: "Optional Discord and Telegram sources", evidence: `${POSTS.filter((p) => p.source === "telegram").length} Telegram and ${POSTS.filter((p) => p.source === "discord").length} Discord messages alongside X posts`, href: "/pulse", pass: POSTS.some((p) => p.source === "telegram") && POSTS.some((p) => p.source === "discord") },
     { requirement: "Token, sentiment, conviction, urgency", evidence: "Structured extraction on every post", href: "/pulse", pass: pulse.posts.every((p) => typeof p.x.sentiment === "number" && typeof p.x.conviction === "number" && typeof p.x.urgency === "number") },
     { requirement: "Trusted voices converge", evidence: "Trust-weighted score with an echo filter", href: "/candidates", pass: run.decisions.some((d) => d.social.strength === "strong") },
     { requirement: "Transparent signal rules", evidence: `${FUSION_RULES.length}-rule fusion table shown in the app`, href: "/rules", pass: FUSION_RULES.length > 0 },
@@ -32,7 +34,7 @@ export default function ScorecardPage() {
   const passed = checks.filter((c) => c.pass).length;
   return (
     <>
-      <PageHeader title="Scorecard" description="Every requirement of the RYO-CHAN Autonomous Agents bounty, checked live against the running agent." />
+      <PageHeader title="Scorecard" description="Every capability the agent is expected to show, checked live against the running agent." />
       <PulseRail
         items={[
           { label: "Requirements met", value: `${passed}/${checks.length}`, tone: passed === checks.length ? "good" : "warn" },

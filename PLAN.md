@@ -16,7 +16,7 @@ Ship a working agent with a dashboard that:
 
 | # | Milestone | State |
 |---|---|---|
-| 1 | Data layer and mock feed | Done (`lib/data/index.ts`, 9 KOLs, 16 posts, wallet events, market paths) |
+| 1 | Data layer and mock feed | Done (`lib/data/index.ts`, 24 KOLs (20 followed by default), 29 posts across X, Telegram and Discord, wallet events, market paths) |
 | 2 | Extraction and convergence | Done (`lib/extract.ts`, `lib/converge.ts`). Optional LLM extractor in `lib/extract-llm.ts`, untested without an API key. |
 | 3 | Wallet check and fusion | Done (`lib/converge.ts`, `lib/fusion.ts`) |
 | 4 | Trade engine and risk limits | Done (`lib/trade.ts`) |
