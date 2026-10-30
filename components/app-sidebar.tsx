@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Ban, FlaskConical, Gavel, History, LayoutDashboard, ListChecks, MessagesSquare, Settings, ShieldCheck, Waves, Wallet, type LucideIcon } from "lucide-react";
+import { Ban, FlaskConical, Gavel, History, LayoutDashboard, ListChecks, MessagesSquare, Database, Scale, Settings, Trophy, Waves, Wallet, type LucideIcon } from "lucide-react";
 import { BrandLogo } from "@/components/brand";
 import { cn } from "@/lib/utils";
 
@@ -29,6 +29,14 @@ const SECTIONS: { label: string; items: { href: string; label: string; icon: Luc
       { href: "/rejections", label: "Rejections", icon: Ban },
       { href: "/backtest", label: "Backtest", icon: FlaskConical },
       { href: "/replay", label: "Replay", icon: History },
+    ],
+  },
+  {
+    label: "Transparency",
+    items: [
+      { href: "/rules", label: "Signal Rules", icon: Scale },
+      { href: "/sources", label: "Data Sources", icon: Database },
+      { href: "/scorecard", label: "Scorecard", icon: Trophy },
     ],
   },
   { label: "Account", items: [{ href: "/settings", label: "Settings", icon: Settings }] },
@@ -68,13 +76,6 @@ export function AppSidebar() {
             </div>
           ))}
         </nav>
-        <div className="mt-auto rounded-lg border bg-card p-3 text-xs text-muted-foreground">
-          <p className="flex items-center gap-2 font-medium text-foreground">
-            <ShieldCheck className="size-3.5 text-emerald-400" /> Practice trades only
-            <span className="ml-auto rounded-full border border-amber-400/40 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide text-amber-300">Beta</span>
-          </p>
-          <p className="mt-1">Sample data. No real funds.</p>
-        </div>
       </aside>
 
       <div className="sticky top-0 z-20 border-b bg-background/80 backdrop-blur md:hidden">

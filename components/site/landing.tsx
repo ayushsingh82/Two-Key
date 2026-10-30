@@ -59,7 +59,8 @@ export function Hero() {
           <span className="size-1.5 rounded-full bg-accent" /> Practice trades only. No real funds.
         </span>
         <h1 className="mx-auto mt-6 max-w-4xl font-display text-4xl font-semibold tracking-tight sm:text-6xl">
-          Two keys must turn before the agent trades.
+          Where autonomous capital
+          <span className="block text-muted-foreground">moves only when the evidence does.</span>
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-lg text-muted-foreground">
           Two-Key follows up to 20 crypto KOLs, checks whether real wallets agree, and only then records a practice trade inside your risk limits. Every decision, including every no, can be replayed.
@@ -199,12 +200,36 @@ export function Faq() {
   );
 }
 
+const FOOTER_LINKS: { title: string; links: [string, string][] }[] = [
+  { title: "Product", links: [["/board", "Signal Board"], ["/court", "Court"], ["/portfolio", "Portfolio"], ["/backtest", "Backtest"]] },
+  { title: "Transparency", links: [["/rules", "Signal Rules"], ["/replay", "Replay"], ["/sources", "Data Sources"], ["/scorecard", "Scorecard"]] },
+  { title: "Resources", links: [["/pulse", "KOL Pulse"], ["/wallets", "Wallet Flow"], ["/rejections", "Rejections"], ["/settings", "Settings"]] },
+];
+
 export function Footer() {
   return (
     <footer className="border-t">
-      <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-xs text-muted-foreground sm:flex-row sm:justify-between sm:px-6">
-        <p>Two-Key. Built for the RYO-CHAN Autonomous Agents bounty at the BLI Legal Tech Hackathon 2.</p>
-        <p>Practice trades only. Not financial advice.</p>
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
+        <div>
+          <BrandLogo />
+          <p className="mt-3 max-w-xs text-sm text-muted-foreground">An autonomous agent that acts only when social conviction and on-chain money agree, and keeps a replayable record of every decision.</p>
+        </div>
+        {FOOTER_LINKS.map(({ title, links }) => (
+          <nav key={title} aria-label={title}>
+            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground/70">{title}</p>
+            <ul className="mt-3 space-y-2 text-sm">
+              {links.map(([href, label]) => (
+                <li key={href}><Link href={href} className="text-muted-foreground transition-colors hover:text-foreground">{label}</Link></li>
+              ))}
+            </ul>
+          </nav>
+        ))}
+      </div>
+      <div className="border-t">
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
+          <p>&copy; {new Date().getFullYear()} Two-Key. All rights reserved.</p>
+          <p className="flex items-center gap-2"><span className="size-1.5 rounded-full bg-emerald-400" /> All systems operational</p>
+        </div>
       </div>
     </footer>
   );

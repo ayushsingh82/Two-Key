@@ -7,7 +7,7 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 const display = Bricolage_Grotesque({ variable: "--font-display", subsets: ["latin"], weight: ["500", "600", "700"] });
 
 export const metadata: Metadata = {
-  title: { default: "Two-Key: practice trades that need two keys", template: "%s - Two-Key" },
+  title: { default: "Two-Key: Where autonomous capital moves only when the evidence does", template: "%s - Two-Key" },
   description:
     "An agent that only opens a practice trade when trusted KOLs and real wallets agree. Every decision keeps a replayable evidence trail.",
 };
