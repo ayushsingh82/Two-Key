@@ -227,7 +227,7 @@ export function Footer() {
       </div>
       <div className="border-t">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <p>&copy; {new Date().getFullYear()} Two-Key. All rights reserved.</p>
+          <p>&copy; 2026 Two-Key. All rights reserved.</p>
           <p className="flex items-center gap-2"><span className="size-1.5 rounded-full bg-emerald-400" /> All systems operational</p>
         </div>
       </div>
